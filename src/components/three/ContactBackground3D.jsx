@@ -34,7 +34,7 @@ function Stars({ count = 100 }) {
 function ContactOrb() {
   const mesh = useRef();
 
-  useFrame((state) => {
+  useFrame(() => {
     if (mesh.current) {
       mesh.current.rotation.x += 0.001;
       mesh.current.rotation.y += 0.002;

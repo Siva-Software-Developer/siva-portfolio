@@ -1,8 +1,8 @@
+import { Suspense, lazy } from "react";
 import { skillCategories } from "../../data/skills";
 import SectionHeading from "../ui/SectionHeading";
 import ScrollReveal from "../ui/ScrollReveal";
-import SkillsBackground3D from "../three/SkillsBackground3D";
-import { Suspense } from "react";
+const SkillsBackground3D = lazy(() => import("../three/SkillsBackground3D"));
 
 export default function Skills() {
   return (

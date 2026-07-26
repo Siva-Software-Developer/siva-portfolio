@@ -1,10 +1,10 @@
+import { Suspense, lazy } from "react";
 import { Mail, MapPin, GraduationCap, User, Phone } from "lucide-react";
 import { personalInfo } from "../../data/personal";
 import { siteConfig } from "../../config/site";
 import SectionHeading from "../ui/SectionHeading";
 import ScrollReveal from "../ui/ScrollReveal";
-import AboutBackground3D from "../three/AboutBackground3D";
-import { Suspense } from "react";
+const AboutBackground3D = lazy(() => import("../three/AboutBackground3D"));
 
 const infoItems = [
   { icon: User, label: "Name", value: personalInfo.name },

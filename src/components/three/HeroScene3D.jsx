@@ -1,7 +1,6 @@
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, Stars, OrbitControls } from "@react-three/drei";
-import * as THREE from "three";
+import { Float, MeshDistortMaterial, Stars } from "@react-three/drei";
 
 function FloatingShape({ position, color, speed, distort, scale, geometry = "icosahedron" }) {
   const meshRef = useRef();
@@ -43,7 +42,7 @@ function FloatingShape({ position, color, speed, distort, scale, geometry = "ico
 function Torus({ position, color, speed }) {
   const meshRef = useRef();
 
-  useFrame((state) => {
+  useFrame(() => {
     if (meshRef.current) {
       meshRef.current.rotation.x += speed * 0.5;
       meshRef.current.rotation.y += speed * 0.3;

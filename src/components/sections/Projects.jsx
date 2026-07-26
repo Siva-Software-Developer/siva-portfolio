@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { ExternalLink, Eye } from "lucide-react";
 import { GitHubIcon } from "../ui/SocialIcons";
 import { projects } from "../../data/projects";
@@ -6,8 +6,7 @@ import SectionHeading from "../ui/SectionHeading";
 import ScrollReveal from "../ui/ScrollReveal";
 import Button from "../ui/Button";
 import ProjectModal from "./ProjectModal";
-import ProjectsBackground3D from "../three/ProjectsBackground3D";
-import { Suspense } from "react";
+const ProjectsBackground3D = lazy(() => import("../three/ProjectsBackground3D"));
 
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState(null);

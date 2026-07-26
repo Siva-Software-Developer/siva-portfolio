@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Menu, X } from "lucide-react";
 import { siteConfig } from "../../config/site";
 import { useActiveSection, scrollToSection } from "../../hooks/useActiveSection";
@@ -7,7 +7,7 @@ import Button from "../ui/Button";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const sectionIds = siteConfig.navLinks.map((link) => link.id);
+  const sectionIds = useMemo(() => siteConfig.navLinks.map((link) => link.id), []);
   const activeSection = useActiveSection(sectionIds);
 
   useEffect(() => {

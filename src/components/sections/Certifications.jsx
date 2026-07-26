@@ -1,9 +1,9 @@
+import { Suspense, lazy } from "react";
 import { Award, ExternalLink } from "lucide-react";
 import { certifications } from "../../data/certifications";
 import SectionHeading from "../ui/SectionHeading";
 import ScrollReveal from "../ui/ScrollReveal";
-import CertificationsBackground3D from "../three/CertificationsBackground3D";
-import { Suspense } from "react";
+const CertificationsBackground3D = lazy(() => import("../three/CertificationsBackground3D"));
 
 export default function Certifications() {
   return (

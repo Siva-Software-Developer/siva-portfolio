@@ -1,52 +1,112 @@
-import { useState } from "react";
-import { Mail, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { Suspense, lazy, useState } from "react";
+import { Mail, Send, CheckCircle, AlertCircle, LoaderCircle } from "lucide-react";
 import { GitHubIcon, LinkedInIcon } from "../ui/SocialIcons";
 import { siteConfig } from "../../config/site";
 import SectionHeading from "../ui/SectionHeading";
 import ScrollReveal from "../ui/ScrollReveal";
 import Button from "../ui/Button";
-import ContactBackground3D from "../three/ContactBackground3D";
-import { Suspense } from "react";
+const ContactBackground3D = lazy(() => import("../three/ContactBackground3D"));
+
+const initialFormState = { name: "", email: "", subject: "", message: "" };
 
 export default function Contact() {
-  const [formState, setFormState] = useState({ name: "", email: "", subject: "", message: "" });
+  const [formState, setFormState] = useState(initialFormState);
   const [status, setStatus] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const buildMailtoLink = (values) => {
+    const subject = `Portfolio contact: ${values.subject || "Hello"}`;
+    const body = [
+      `Name: ${values.name}`,
+      `Email: ${values.email}`,
+      "",
+      values.message,
+    ].join("\n");
+
+    return `mailto:${siteConfig.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus(null);
+    setIsSubmitting(true);
 
     const { provider, formspreeEndpoint, emailjs } = siteConfig.contactForm;
+    const trimmedFormState = {
+      name: formState.name.trim(),
+      email: formState.email.trim(),
+      subject: formState.subject.trim(),
+      message: formState.message.trim(),
+    };
+
+    if (!trimmedFormState.name || !trimmedFormState.email || !trimmedFormState.subject || !trimmedFormState.message) {
+      setStatus("error");
+      setIsSubmitting(false);
+      return;
+    }
 
     if (provider === "formspree" && formspreeEndpoint) {
       try {
         const res = await fetch(formspreeEndpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify(formState),
+          body: JSON.stringify(trimmedFormState),
         });
         if (res.ok) {
           setStatus("success");
-          setFormState({ name: "", email: "", subject: "", message: "" });
+          setFormState(initialFormState);
         } else {
           setStatus("error");
         }
       } catch {
         setStatus("error");
+      } finally {
+        setIsSubmitting(false);
       }
       return;
     }
 
-    if (provider === "emailjs" && emailjs.serviceId) {
-      setStatus("info");
-      return;
+    if (provider === "emailjs" && emailjs.serviceId && emailjs.templateId && emailjs.publicKey) {
+      try {
+        if (typeof window !== "undefined" && typeof window.emailjs?.send === "function") {
+          await window.emailjs.send(
+            emailjs.serviceId,
+            emailjs.templateId,
+            {
+              from_name: trimmedFormState.name,
+              from_email: trimmedFormState.email,
+              subject: trimmedFormState.subject,
+              message: trimmedFormState.message,
+              to_email: siteConfig.email,
+            },
+            emailjs.publicKey,
+          );
+
+          setStatus("success");
+          setFormState(initialFormState);
+          setIsSubmitting(false);
+          return;
+        }
+      } catch {
+        setStatus("error");
+        setIsSubmitting(false);
+        return;
+      }
     }
 
-    setStatus("demo");
+    if (typeof window !== "undefined") {
+      window.location.href = buildMailtoLink(trimmedFormState);
+      setStatus("success");
+      setFormState(initialFormState);
+    } else {
+      setStatus("error");
+    }
+
+    setIsSubmitting(false);
   };
 
   const contactLinks = [
@@ -80,7 +140,7 @@ export default function Contact() {
                 rel={label !== "Email" ? "noopener noreferrer" : undefined}
                 className="flex items-center gap-4 p-4 rounded-xl glass-premium glass-hover group border-cyan-500/20 shadow-lg shadow-cyan-500/10 hover:shadow-cyan-500/20 transition-all duration-300"
               >
-                <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 text-cyan-400 group-hover:bg-cyan-500/30 transition-all duration-300 shadow-lg shadow-cyan-500/10">
+                <div className="p-3 rounded-xl bg-linear-to-br from-cyan-500/20 to-blue-500/20 text-cyan-400 group-hover:bg-cyan-500/30 transition-all duration-300 shadow-lg shadow-cyan-500/10">
                   <Icon size={24} />
                 </div>
                 <div>
@@ -143,33 +203,32 @@ export default function Contact() {
                   rows={5}
                   value={formState.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 transition-all duration-300 resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-linear-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 transition-all duration-300 resize-none"
                   placeholder="Your message..."
                 />
               </div>
 
               {status === "success" && (
                 <div className="flex items-center gap-2 text-emerald-400 text-sm p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                  <CheckCircle size={16} /> Message sent successfully!
+                  <CheckCircle size={16} /> Your email app should open with your message ready. If it does not, send it directly to {siteConfig.email}.
                 </div>
               )}
               {status === "error" && (
                 <div className="flex items-center gap-2 text-red-400 text-sm p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                  <AlertCircle size={16} /> Failed to send. Please try again or email directly.
-                </div>
-              )}
-              {status === "demo" && (
-                <div className="flex items-start gap-2 text-amber-400 text-sm p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                  <AlertCircle size={16} className="shrink-0 mt-0.5" />
-                  <span>
-                    Form is frontend-only. Configure Formspree or EmailJS in{" "}
-                    <code className="text-amber-300 bg-amber-500/20 px-2 py-1 rounded">src/config/site.js</code> to enable sending.
-                  </span>
+                  <AlertCircle size={16} /> Please complete every field and try again. If the form still fails, email me directly at {siteConfig.email}.
                 </div>
               )}
 
-              <Button type="submit" className="w-full sm:w-auto">
-                <Send size={18} /> Send Message
+              <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <LoaderCircle size={18} className="animate-spin" /> Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send size={18} /> Send Message
+                  </>
+                )}
               </Button>
             </form>
           </ScrollReveal>

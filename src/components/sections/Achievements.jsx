@@ -1,9 +1,9 @@
+import { Suspense, lazy } from "react";
 import { Trophy, Globe } from "lucide-react";
 import { achievements, languages } from "../../data/achievements";
 import SectionHeading from "../ui/SectionHeading";
 import ScrollReveal from "../ui/ScrollReveal";
-import AchievementsBackground3D from "../three/AchievementsBackground3D";
-import { Suspense } from "react";
+const AchievementsBackground3D = lazy(() => import("../three/AchievementsBackground3D"));
 
 export default function Achievements() {
   return (

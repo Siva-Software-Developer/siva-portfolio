@@ -21,7 +21,7 @@ export const siteConfig = {
   // Contact form — configure one provider when ready
   contactForm: {
     enabled: true,
-    provider: "none", // "none" | "formspree" | "emailjs"
+    provider: "mailto", // "mailto" | "formspree" | "emailjs"
     formspreeEndpoint: "", // e.g. "https://formspree.io/f/xxxxxxxx"
     emailjs: {
       serviceId: "",

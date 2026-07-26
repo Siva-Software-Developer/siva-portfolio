@@ -1,9 +1,9 @@
+import { Suspense, lazy } from "react";
 import { Briefcase, CheckCircle2 } from "lucide-react";
 import { experiences } from "../../data/experience";
 import SectionHeading from "../ui/SectionHeading";
 import ScrollReveal from "../ui/ScrollReveal";
-import ExperienceBackground3D from "../three/ExperienceBackground3D";
-import { Suspense } from "react";
+const ExperienceBackground3D = lazy(() => import("../three/ExperienceBackground3D"));
 
 export default function Experience() {
   return (

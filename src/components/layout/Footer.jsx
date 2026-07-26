@@ -1,8 +1,8 @@
+import { Suspense, lazy } from "react";
 import { Mail, ArrowUp } from "lucide-react";
 import { GitHubIcon, LinkedInIcon } from "../ui/SocialIcons";
 import { siteConfig } from "../../config/site";
-import FooterBackground3D from "../three/FooterBackground3D";
-import { Suspense } from "react";
+const FooterBackground3D = lazy(() => import("../three/FooterBackground3D"));
 
 export default function Footer() {
   const socialLinks = [
@@ -63,11 +63,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-6 border-t border-cyan-500/10 text-center text-zinc-500 text-xs">
-          <p>
-            <a href="#" className="text-cyan-400 hover:text-cyan-300 transition-colors">Privacy Policy</a>
-            {" • "}
-            <a href="#" className="text-cyan-400 hover:text-cyan-300 transition-colors">Terms of Service</a>
-          </p>
+          <p>© 2026 Siva Dharmalingam. All rights reserved.</p>
         </div>
       </div>
     </footer>

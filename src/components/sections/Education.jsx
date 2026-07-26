@@ -1,9 +1,9 @@
+import { Suspense, lazy } from "react";
 import { GraduationCap } from "lucide-react";
 import { education } from "../../data/education";
 import SectionHeading from "../ui/SectionHeading";
 import ScrollReveal from "../ui/ScrollReveal";
-import EducationBackground3D from "../three/EducationBackground3D";
-import { Suspense } from "react";
+const EducationBackground3D = lazy(() => import("../three/EducationBackground3D"));
 
 export default function Education() {
   return (

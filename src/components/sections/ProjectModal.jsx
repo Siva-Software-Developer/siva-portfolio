@@ -1,20 +1,57 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { X, ExternalLink, Calendar } from "lucide-react";
 import { GitHubIcon } from "../ui/SocialIcons";
 import Button from "../ui/Button";
 
 export default function ProjectModal({ project, onClose }) {
+  const modalRef = useRef(null);
+
+  const focusableSelectors = [
+    "a[href]",
+    "button:not([disabled])",
+    "textarea:not([disabled])",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "[tabindex]:not([tabindex='-1'])",
+  ].join(", ");
+
+  const handleFocusTrap = useCallback((e) => {
+    if (e.key !== "Tab") return;
+    const container = modalRef.current;
+    if (!container) return;
+
+    const focusable = container.querySelectorAll(focusableSelectors);
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }, [focusableSelectors]);
+
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === "Escape") onClose();
     };
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleEscape);
+    window.addEventListener("keydown", handleFocusTrap);
     return () => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", handleEscape);
+      window.removeEventListener("keydown", handleFocusTrap);
     };
-  }, [onClose]);
+  }, [onClose, handleFocusTrap]);
 
   if (!project) return null;
 
@@ -27,6 +64,7 @@ export default function ProjectModal({ project, onClose }) {
       aria-labelledby="project-modal-title"
     >
       <div
+        ref={modalRef}
         className="glass rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8"
         onClick={(e) => e.stopPropagation()}
       >

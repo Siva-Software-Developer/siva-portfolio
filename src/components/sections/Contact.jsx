@@ -1,5 +1,5 @@
 import { Suspense, lazy, useState } from "react";
-import { Mail, Send, CheckCircle, AlertCircle, LoaderCircle } from "lucide-react";
+import { Mail, Send, CheckCircle, AlertCircle, LoaderCircle, Download } from "lucide-react";
 import { GitHubIcon, LinkedInIcon } from "../ui/SocialIcons";
 import { siteConfig } from "../../config/site";
 import SectionHeading from "../ui/SectionHeading";
@@ -149,6 +149,23 @@ export default function Contact() {
                 </div>
               </a>
             ))}
+
+            {/* Resume download card — lets recruiters download the resume directly */}
+            <a
+              href={siteConfig.resumePath}
+              download={siteConfig.resumeFileName}
+              className="flex items-center gap-4 p-4 rounded-xl glass-premium glass-hover group border-cyan-500/20 shadow-lg shadow-cyan-500/10 hover:shadow-cyan-500/20 transition-all duration-300 mt-4"
+              aria-label="Download resume"
+              title="Download resume"
+            >
+              <div className="p-3 rounded-xl bg-linear-to-br from-emerald-500/20 to-cyan-500/20 text-emerald-400 group-hover:from-emerald-500/30 group-hover:to-cyan-500/30 transition-all duration-300 shadow-lg shadow-cyan-500/10">
+                <Download size={24} />
+              </div>
+              <div>
+                <p className="text-xs text-emerald-400 uppercase tracking-wider font-semibold">Resume</p>
+                <p className="text-zinc-200 group-hover:text-cyan-300 transition-colors duration-300 text-sm">Download PDF</p>
+              </div>
+            </a>
           </ScrollReveal>
 
           <ScrollReveal delay={0.1} className="lg:col-span-3">

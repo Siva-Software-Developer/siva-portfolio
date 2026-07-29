@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "homepage": "https://Siva-Software-Developer.github.io/siva-portfolio/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -51,7 +51,7 @@ function TimelineHelix() {
 export default function ExperienceBackground3D() {
   return (
     <div className="absolute inset-0 -z-10">
-      <Canvas camera={{ position: [0, 0, 15], fov: 50 }}>
+      <Canvas camera={{ position: [0, 0, 15], fov: 50 }} dpr={[1, 1.5]}>
         <ambientLight intensity={0.4} />
         <directionalLight position={[10, 10, 5]} intensity={1} />
         <TimelineHelix />

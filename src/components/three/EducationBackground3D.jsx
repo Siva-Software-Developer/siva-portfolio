@@ -40,7 +40,7 @@ function EducationBooks() {
 export default function EducationBackground3D() {
   return (
     <div className="absolute inset-0 -z-10">
-      <Canvas camera={{ position: [0, 0, 16], fov: 50 }}>
+      <Canvas camera={{ position: [0, 0, 16], fov: 50 }} dpr={[1, 1.5]}>
         <ambientLight intensity={0.45} />
         <directionalLight position={[10, 10, 5]} intensity={1.1} />
         <pointLight position={[-8, 5, 3]} intensity={0.7} color="#22d3ee" />

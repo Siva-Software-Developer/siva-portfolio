@@ -33,7 +33,7 @@ function FooterGrid() {
 export default function FooterBackground3D() {
   return (
     <div className="absolute inset-0 -z-10 h-full">
-      <Canvas camera={{ position: [0, 0, 18], fov: 50 }}>
+      <Canvas camera={{ position: [0, 0, 18], fov: 50 }} dpr={[1, 1.5]}>
         <ambientLight intensity={0.4} />
         <directionalLight position={[10, 10, 10]} intensity={0.8} />
         <FooterGrid />
